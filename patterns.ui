@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>patterns</class>
+ <widget class="QMainWindow" name="patterns">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>To-Do List</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTableView" name="taskTable">
+      <property name="columnCount">
+       <number>5</number>
+      </property>
+      <property name="horizontalHeaderLabels" stdset="0">
+       <stringlist>
+        <string>Название</string>
+        <string>Категория</string>
+        <string>Приоритет</string>
+        <string>Срок</string>
+        <string>Статус</string>
+       </stringlist>
+      </property>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="buttonLayout">
+      <item>
+       <widget class="QPushButton" name="addTaskButton">
+        <property name="text">
+         <string>Добавить задачу</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="removeTaskButton">
+        <property name="text">
+         <string>Удалить задачу</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="markCompleteButton">
+        <property name="text">
+         <string>Отметить выполненной</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="importTasksButton">
+        <property name="text">
+         <string>Импорт задач</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="saveTasksButton">
+        <property name="text">
+         <string>Сохранить</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QFormLayout" name="addTaskLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="taskNameLabel">
+        <property name="text">
+         <string>Название:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="taskNameInput"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="categoryLabel">
+        <property name="text">
+         <string>Категория:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="categoryInput">
+        <item>
+         <property name="text">
+          <string>дом</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>работа</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>семья</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>дети</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>родители</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>жена</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>муж</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="priorityLabel">
+        <property name="text">
+         <string>Приоритет:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="dueDateLabel">
+        <property name="text">
+         <string>Срок выполнения:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDateEdit" name="dueDateInput">
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="priorityInput">
+        <item>
+         <property name="text">
+          <string>Низкий</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Средний</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Высокий</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="saveFormatLabel">
+        <property name="text">
+         <string>Формат сохранения:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="saveFormatInput">
+        <item>
+         <property name="text">
+          <string>JSON</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>CSV</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

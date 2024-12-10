@@ -65,6 +65,7 @@ public:
         verticalLayout->setObjectName("verticalLayout");
         taskTable = new QTableView(centralwidget);
         taskTable->setObjectName("taskTable");
+        taskTable->setProperty("columnCount", QVariant(5));
 
         verticalLayout->addWidget(taskTable);
 

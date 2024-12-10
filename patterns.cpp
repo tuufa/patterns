@@ -9,83 +9,98 @@
 #include <QTextStream>
 #include <QDebug>
 
+// Конструктор класса patterns
 patterns::patterns(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::patterns),
-    taskModel(new TaskModel(this))
+    taskModel(new TaskModel(this)) // Инициализируем модель задач
 {
-    ui->setupUi(this);
+    ui->setupUi(this); // Настраиваем UI
 
+    // Устанавливаем модель для таблицы задач
     ui->taskTable->setModel(taskModel);
 }
 
+// Деструктор класса patterns
 patterns::~patterns()
 {
-    delete ui;
+    delete ui; // Освобождаем память, выделенную для UI
 }
 
+// Слот для добавления новой задачи
 void patterns::on_addTaskButton_clicked()
 {
-    qDebug() << "Добавление задачи";
+    qDebug() << "Добавление задачи"; // Логируем действие
+
+    // Получаем название задачи из ввода
     QString name = ui->taskNameInput->text().trimmed();
     if (name.isEmpty())
     {
+        // Предупреждаем, если название задачи пустое
         QMessageBox::warning(this, "Ошибка", "Название задачи не может быть пустым.");
         return;
     }
 
+    // Получаем остальные данные задачи
     QString category = ui->categoryInput->currentText();
     QString priority = ui->priorityInput->currentText();
     QDate dueDate = ui->dueDateInput->date();
     QString status = "Не выполнено";
 
+    // Создаем объект задачи и добавляем его в модель
     Task newTask(name, category, priority, dueDate, status);
     taskModel->addTask(newTask);
 
+    // Очищаем поле ввода названия задачи
     ui->taskNameInput->clear();
 }
 
-
-
+// Слот для удаления выбранной задачи
 void patterns::on_removeTaskButton_clicked()
 {
-    QModelIndex index = ui->taskTable->currentIndex();
+    QModelIndex index = ui->taskTable->currentIndex(); // Получаем текущий выбранный индекс
     if (index.isValid())
     {
-        taskModel->removeTask(index.row());
+        taskModel->removeTask(index.row()); // Удаляем задачу по индексу
     }
     else
     {
+        // Показываем предупреждение, если задача не выбрана
         QMessageBox::warning(this, "Удаление задачи", "Пожалуйста, выберите задачу для удаления.");
     }
 }
 
-void patterns::on_markCompleteButton_clicked() {
-    QModelIndex index = ui->taskTable->currentIndex();
+// Слот для отметки задачи как выполненной
+void patterns::on_markCompleteButton_clicked()
+{
+    QModelIndex index = ui->taskTable->currentIndex(); // Получаем текущий выбранный индекс
     if (index.isValid())
     {
-        taskModel->markComplete(index.row());
+        taskModel->markComplete(index.row()); // Отмечаем задачу выполненной
     }
     else
     {
+        // Показываем предупреждение, если задача не выбрана
         QMessageBox::warning(this, "Отметить выполненной", "Пожалуйста, выберите задачу для отметки.");
     }
 }
 
+// Слот для сохранения задач в файл
 void patterns::on_saveTasksButton_clicked()
 {
-    // Получаем выбранный формат
+    // Получаем выбранный формат сохранения
     QString selectedFormat = ui->saveFormatInput->currentText();
 
-    // Выбираем файл для сохранения
+    // Открываем диалог выбора файла
     QString fileName = QFileDialog::getSaveFileName(this, "Сохранить задачи", "",
                                                     (selectedFormat == "CSV") ? "CSV Files (*.csv)" : "JSON Files (*.json)");
 
     if (fileName.isEmpty())
     {
-        return; // Пользователь отменил выбор файла
+        return; // Если файл не выбран, выходим
     }
 
+    // В зависимости от формата вызываем соответствующий метод
     if (selectedFormat == "CSV")
     {
         saveTasksToCSV(fileName);
@@ -100,19 +115,21 @@ void patterns::on_saveTasksButton_clicked()
     }
 }
 
-// Метод для сохранения в CSV
+// Метод для сохранения задач в формате CSV
 void patterns::saveTasksToCSV(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
+        // Если файл не удалось открыть, показываем предупреждение
         QMessageBox::warning(this, "Ошибка", "Не удалось открыть файл для записи.");
         return;
     }
 
     QTextStream out(&file);
-    out << "Название,Категория,Приоритет,Срок,Статус\n"; // Заголовок
+    out << "Название,Категория,Приоритет,Срок,Статус\n"; // Пишем заголовок
 
+    // Записываем каждую задачу в формате CSV
     for (int row = 0; row < taskModel->rowCount(); ++row)
     {
         QStringList rowData;
@@ -121,14 +138,14 @@ void patterns::saveTasksToCSV(const QString &fileName)
             QVariant data = taskModel->data(taskModel->index(row, col), Qt::DisplayRole);
             rowData << data.toString().replace("\"", "\"\""); // Экранируем кавычки
         }
-        out << "\"" << rowData.join("\",\"") << "\"\n";
+        out << "\"" << rowData.join("\",\"") << "\"\n"; // Форматируем строку
     }
 
     file.close();
     QMessageBox::information(this, "Сохранение", "Задачи успешно сохранены в CSV.");
 }
 
-// Метод для сохранения в JSON
+// Метод для сохранения задач в формате JSON
 void patterns::saveTasksToJSON(const QString &fileName)
 {
     QFile file(fileName);
@@ -139,6 +156,8 @@ void patterns::saveTasksToJSON(const QString &fileName)
     }
 
     QJsonArray tasksArray;
+
+    // Записываем каждую задачу как объект JSON
     for (int row = 0; row < taskModel->rowCount(); ++row)
     {
         QJsonObject taskObject;
@@ -156,18 +175,22 @@ void patterns::saveTasksToJSON(const QString &fileName)
     QMessageBox::information(this, "Сохранение", "Задачи успешно сохранены в JSON.");
 }
 
+// Слот для импорта задач из файла
 void patterns::on_importTasksButton_clicked()
 {
+    // Получаем выбранный формат файла
     QString selectedFormat = ui->saveFormatInput->currentText();
 
+    // Открываем диалог выбора файла
     QString fileName = QFileDialog::getOpenFileName(this, "Импорт задач", "",
                                                     (selectedFormat == "CSV") ? "CSV Files (*.csv)" : "JSON Files (*.json)");
 
     if (fileName.isEmpty())
     {
-        return;
+        return; // Если файл не выбран, выходим
     }
 
+    // В зависимости от формата вызываем соответствующий метод
     if (selectedFormat == "CSV")
     {
         importTasksFromCSV(fileName);
@@ -182,7 +205,7 @@ void patterns::on_importTasksButton_clicked()
     }
 }
 
-
+// Метод для импорта задач из CSV
 void patterns::importTasksFromCSV(const QString &fileName)
 {
     QFile file(fileName);
@@ -195,6 +218,7 @@ void patterns::importTasksFromCSV(const QString &fileName)
     QTextStream in(&file);
     QString headerLine = in.readLine(); // Пропускаем заголовок
 
+    // Читаем данные из файла построчно
     while (!in.atEnd())
     {
         QString line = in.readLine();
@@ -206,6 +230,7 @@ void patterns::importTasksFromCSV(const QString &fileName)
             continue;
         }
 
+        // Извлекаем данные задачи
         QString name = columns[0].trimmed().remove('"');
         QString category = columns[1].trimmed().remove('"');
         QString priority = columns[2].trimmed().remove('"');
@@ -226,6 +251,7 @@ void patterns::importTasksFromCSV(const QString &fileName)
     QMessageBox::information(this, "Импорт", "Задачи успешно импортированы из CSV.");
 }
 
+// Метод для импорта задач из JSON
 void patterns::importTasksFromJSON(const QString &fileName)
 {
     QFile file(fileName);
@@ -246,6 +272,8 @@ void patterns::importTasksFromJSON(const QString &fileName)
     }
 
     QJsonArray tasksArray = doc.array();
+
+    // Обрабатываем каждый объект задачи
     for (const QJsonValue &value : tasksArray)
     {
         if (!value.isObject())
@@ -274,5 +302,4 @@ void patterns::importTasksFromJSON(const QString &fileName)
 
     QMessageBox::information(this, "Импорт", "Задачи успешно импортированы из JSON.");
 }
-
 

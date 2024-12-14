@@ -1,4 +1,3 @@
-// taskmodel.h
 #ifndef TASKMODEL_H
 #define TASKMODEL_H
 

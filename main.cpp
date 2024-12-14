@@ -1,4 +1,3 @@
-// main.cpp
 #include "patterns.h"
 #include <QApplication>
 #include <QLocale>

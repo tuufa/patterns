@@ -1,4 +1,3 @@
-// task.cpp
 #include "task.h"
 
 Task::Task(const QString &name, const QString &category, const QString &priority, const QDate &dueDate, const QString &status)
